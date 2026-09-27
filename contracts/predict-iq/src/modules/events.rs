@@ -235,6 +235,21 @@ pub fn emit_creation_deposit_set(e: &Env, old_amount: i128, new_amount: i128) {
     );
 }
 
+/// Issue #1544: Emit CircuitBreakerThresholdSet event.
+///
+/// Follows the `emit_creation_deposit_set` pattern so indexers can track
+/// configuration drift of the loss threshold that gates the circuit breaker.
+///
+/// Indexer schema:
+///   topics: [cb_thr_set]
+///   data:   (version: u32, old_threshold: i128, new_threshold: i128)
+pub fn emit_circuit_breaker_threshold_set(e: &Env, old_threshold: i128, new_threshold: i128) {
+    e.events().publish(
+        (symbol_short!("cb_thr_set"),),
+        (EVENT_VERSION, old_threshold, new_threshold),
+    );
+}
+
 pub fn emit_monitoring_state_reset(
     e: &Env,
     resetter: Address,

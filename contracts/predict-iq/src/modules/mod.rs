@@ -23,4 +23,6 @@ mod governance_guardian_test;
 #[cfg(test)]
 mod markets_conditional_test;
 #[cfg(test)]
+mod migration_history_test;
+#[cfg(test)]
 mod property_invariants_test;
