@@ -197,13 +197,13 @@ pub fn emit_circuit_breaker_auto(e: &Env, contract_address: Address, error_count
 ///   accumulated per-bet fees tracked via `DataKey::FeeRevenue(token)`)
 pub fn emit_fee_collected(
     e: &Env,
-    _market_id: u64,
+    market_id: u64,
     token: Address,
     recipient: Address,
     amount: i128,
 ) {
     e.events().publish(
-        (symbol_short!("fee_colct"), 0u64, token, recipient),
+        (symbol_short!("fee_colct"), market_id, token, recipient),
         (EVENT_VERSION, amount),
     );
 }
@@ -269,32 +269,5 @@ pub fn emit_upgrade_voted(e: &Env, voter: Address, vote_for: bool) {
     e.events().publish(
         (symbol_short!("upg_vote"), voter),
         (EVENT_VERSION, vote_for),
-    );
-}
-
-pub fn emit_upgrade_executed(e: &Env, executor: Address, wasm_hash: soroban_sdk::BytesN<32>) {
-    e.events().publish(
-        (symbol_short!("upg_exec"), executor),
-        (EVENT_VERSION, wasm_hash),
-    );
-}
-
-pub fn emit_upgrade_rejected(e: &Env, wasm_hash: soroban_sdk::BytesN<32>) {
-    e.events()
-        .publish((symbol_short!("upg_rej"),), (EVENT_VERSION, wasm_hash));
-}
-
-/// Issue #506: Emit MarketStateChanged event for indexing
-/// Includes all fields needed for off-chain state reconstruction
-pub fn emit_market_state_changed(
-    e: &Env,
-    market_id: u64,
-    old_status: soroban_sdk::String,
-    new_status: soroban_sdk::String,
-    timestamp: u64,
-) {
-    e.events().publish(
-        (symbol_short!("mkt_state"), market_id),
-        (EVENT_VERSION, old_status, new_status, timestamp),
     );
 }
